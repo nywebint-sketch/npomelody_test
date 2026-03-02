@@ -177,7 +177,9 @@ function renderArtists() {
 
   list.slice(0, 6).forEach((artist) => {
     const card = el("div", { className: "card catalog-card" });
-    card.appendChild(createMedia(artist.poster || "smile.png", artist.name, "media square catalog-media"));
+    const artistHasPoster = Boolean((artist.poster || "").trim());
+    const mediaClass = artistHasPoster ? "media square catalog-media" : "media square catalog-media is-fallback";
+    card.appendChild(createMedia(artist.poster || "smile.png", artist.name, mediaClass));
 
     const body = el("div", { className: "pad catalog-body" });
     body.appendChild(el("b", { className: "catalog-title artist-name", text: artist.name }));
