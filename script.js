@@ -129,10 +129,6 @@ function renderEvents() {
     pad.appendChild(el("div", { className: "muted event-card-date", text: fmtDT(eventItem.date) }));
     pad.appendChild(el("b", { className: "event-card-title", text: eventItem.title }));
 
-    const tagsRow = el("div", { className: "event-tags" });
-    (eventItem.tags || []).slice(0, 3).forEach((tag) => tagsRow.appendChild(createTag(tag)));
-    if (tagsRow.childElementCount > 0) pad.appendChild(tagsRow);
-
     card.appendChild(pad);
     setupOpenCard(card, "event", eventItem.id);
     wrap.appendChild(card);

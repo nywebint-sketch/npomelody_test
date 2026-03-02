@@ -13,7 +13,7 @@
       --stroke:rgba(255,255,255,.14);
       --stroke2:rgba(255,255,255,.10);
       --card:rgba(8,8,8,.42);
-      --radius:18px;
+      --radius:10px;
       --max:1180px;
     }
     *{box-sizing:border-box}
@@ -599,7 +599,7 @@
         padding:24px 0;
       }
       .card{
-        border-radius:12px;
+        border-radius:10px;
       }
       .pad{
         padding:10px;
