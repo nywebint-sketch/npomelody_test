@@ -13,7 +13,7 @@
       --stroke:rgba(255,255,255,.14);
       --stroke2:rgba(255,255,255,.10);
       --card:rgba(8,8,8,.42);
-      --radius:10px;
+      --radius:18px;
       --max:1180px;
     }
     *{box-sizing:border-box}
@@ -78,6 +78,8 @@
       font-size:clamp(28px, 1.7vw, 36px);
       line-height:1;
       flex-shrink:0;
+      position:static;
+      gap:0;
     }
     .brand-name{
       color:var(--fg);
@@ -255,6 +257,28 @@
     #artistsGrid .open-card .pad{
       padding:12px;
     }
+    #artistsGrid .artist-card .artist-card-body{
+      padding:10px 12px;
+      min-height:56px;
+      display:flex;
+      align-items:center;
+    }
+    #artistsGrid .artist-card .artist-card-name{
+      display:block;
+      width:100%;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      line-height:1.2;
+    }
+    #artistsGrid .artist-name{
+      display:block;
+      white-space:normal;
+      overflow:visible;
+      text-overflow:clip;
+      word-break:break-word;
+      line-height:1.2;
+    }
     .pad{padding:16px}
     .divider{height:1px; background:var(--stroke2); margin:14px 0}
     .muted{color:var(--muted)}
@@ -273,16 +297,12 @@
     .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
     .sp{justify-content:space-between}
     .event-card-title{
-      display:block;
-      padding-left:4px;
       max-width:100%;
       overflow:hidden;
       text-overflow:ellipsis;
       white-space:nowrap;
     }
     .event-card-date{
-      display:block;
-      padding-left:4px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -464,27 +484,7 @@
     .media.cover img{
       object-fit:cover;
     }
-    .media.is-fallback{
-      background:
-        radial-gradient(circle at 30% 20%, rgba(255,255,255,.06), transparent 55%),
-        rgba(255,255,255,.01);
-    }
-    .media.is-fallback img{
-      width:62%;
-      height:62%;
-      object-fit:contain;
-      mix-blend-mode:screen;
-      filter:grayscale(1) contrast(1.25) brightness(1.35);
-      opacity:.9;
-    }
-    #eventsGrid .event-media{
-      aspect-ratio:4/5;
-      padding:0;
-      background:#050505;
-    }
-    #eventsGrid .event-media img{
-      object-fit:contain;
-    }
+    #eventsGrid .event-media img{object-fit:cover}
 
     /* Forms */
     .input, textarea{
@@ -523,7 +523,7 @@
       }
       .brand{
         position:static;
-        gap:8px;
+        gap:0;
         align-items:center;
       }
       .brand .brand-mark{
@@ -539,9 +539,6 @@
       }
       .brand .brand-mark img{
         object-fit:cover;
-      }
-      .brand-name{
-        transform:none;
       }
       .right{
         position:absolute;
@@ -599,7 +596,7 @@
         padding:24px 0;
       }
       .card{
-        border-radius:10px;
+        border-radius:12px;
       }
       .pad{
         padding:10px;
@@ -681,4 +678,20 @@
     @media (max-height: 700px){
       section{padding:34px 0}
       .hero-fullscreen .heroArt{min-height:calc(100vh - 68px)}
+    }
+
+    /* Global sharp corners */
+    .card,
+    .heroArt,
+    .btn,
+    .tag,
+    .pill,
+    .brand-mark,
+    .mobile-menu,
+    .mobile-menu a,
+    .nav a,
+    .input,
+    textarea,
+    #modal > div{
+      border-radius:0 !important;
     }

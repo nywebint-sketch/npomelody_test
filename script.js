@@ -172,15 +172,12 @@ function renderArtists() {
   }
 
   list.slice(0, 6).forEach((artist) => {
-    const card = el("div", { className: "card catalog-card" });
-    const artistHasPoster = Boolean((artist.poster || "").trim());
-    const mediaClass = artistHasPoster ? "media square catalog-media" : "media square catalog-media is-fallback";
-    card.appendChild(createMedia(artist.poster || "smile.png", artist.name, mediaClass));
+    const card = el("div", { className: "card artist-card" });
+    card.appendChild(createMedia(artist.poster || "smile.png", artist.name, "media square"));
 
-    const body = el("div", { className: "pad catalog-body" });
-    body.appendChild(el("b", { className: "catalog-title artist-name", text: artist.name }));
-    body.appendChild(el("div", { className: "catalog-meta", text: artist.role || "—" }));
-    card.appendChild(body);
+    const pad = el("div", { className: "pad artist-card-body" });
+    pad.appendChild(el("b", { className: "artist-card-name", text: artist.name }));
+    card.appendChild(pad);
 
     setupOpenCard(card, "artist", artist.id);
     wrap.appendChild(card);
@@ -749,8 +746,8 @@ const openMobileMenu = () => {
 };
 
 mobileMenuToggle?.addEventListener("click", (e) => {
-  if (!mobileBp.matches) return;
   e.preventDefault();
+  if (!mobileBp.matches) return;
   if (document.body.classList.contains("menu-open")) closeMobileMenu();
   else openMobileMenu();
 });
