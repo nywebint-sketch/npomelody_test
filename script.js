@@ -55,8 +55,8 @@ const BOOKING_ADMIN_ENDPOINT = "https://httpbin.org/post";
 const BOOKING_COOLDOWN_MS = 60 * 1000;
 const BOOKING_MIN_FILL_MS = 3000;
 const BOOKING_KEY = "npo_booking_last_submit_ts";
-const CLUB_USERS_KEY = "npo_club_users_v1";
-const CLUB_SESSION_KEY = "npo_club_session_v1";
+const CLUB_TOKEN_KEY = "npo_club_token_v1";
+const CLUB_API_BASE = window.location.protocol === "file:" ? "http://localhost:8000" : "";
 
 let showUpcoming = false;
 
@@ -79,39 +79,66 @@ const safeHttpUrl = (value) => {
 
 const createTag = (text) => el("span", { className: "tag", text: String(text || "").trim() || "—" });
 
-const readClubUsers = () => {
-  try {
-    const raw = localStorage.getItem(CLUB_USERS_KEY);
-    const parsed = raw ? JSON.parse(raw) : [];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-};
-
-const saveClubUsers = (users) => {
-  localStorage.setItem(CLUB_USERS_KEY, JSON.stringify(users));
-};
-
-const readClubSession = () => {
-  try {
-    return JSON.parse(localStorage.getItem(CLUB_SESSION_KEY) || "null");
-  } catch {
-    return null;
-  }
-};
-
-const saveClubSession = (session) => {
-  if (!session) {
-    localStorage.removeItem(CLUB_SESSION_KEY);
+const readClubToken = () => localStorage.getItem(CLUB_TOKEN_KEY) || "";
+const saveClubToken = (token) => {
+  if (!token) {
+    localStorage.removeItem(CLUB_TOKEN_KEY);
     return;
   }
-  localStorage.setItem(CLUB_SESSION_KEY, JSON.stringify(session));
+  localStorage.setItem(CLUB_TOKEN_KEY, token);
 };
 
 const normalizeEmail = (email) => String(email || "").trim().toLowerCase();
 
 const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+const clubApiUrl = (path) => `${CLUB_API_BASE}${path}`;
+
+const parseJsonSafe = async (response) => {
+  try {
+    return await response.json();
+  } catch {
+    return null;
+  }
+};
+
+const clubRequest = async (path, { method = "GET", body = null, auth = true } = {}) => {
+  const headers = { "Content-Type": "application/json" };
+  const token = readClubToken();
+  if (auth && token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const response = await fetch(clubApiUrl(path), {
+    method,
+    headers,
+    body: body ? JSON.stringify(body) : undefined
+  });
+
+  const payload = await parseJsonSafe(response);
+  if (!response.ok) {
+    const message = payload?.error || payload?.message || "Ошибка запроса";
+    throw new Error(message);
+  }
+  return payload || {};
+};
+
+let clubSession = null;
+
+function renderExclusiveItems(items = []) {
+  const exclusiveContent = $("#exclusiveContent");
+  if (!exclusiveContent) return;
+  exclusiveContent.replaceChildren();
+
+  items.forEach((item) => {
+    const card = el("div", { className: "card pad" });
+    card.appendChild(el("b", { text: item.title || "Эксклюзив" }));
+    const desc = el("div", { className: "muted", text: item.description || "" });
+    desc.style.marginTop = "6px";
+    card.appendChild(desc);
+    exclusiveContent.appendChild(card);
+  });
+}
 
 function renderClubAccess() {
   const authGuest = $("#authGuest");
@@ -122,12 +149,11 @@ function renderClubAccess() {
   const exclusiveContent = $("#exclusiveContent");
   const exclusiveBadge = $("#exclusiveBadge");
 
-  const session = readClubSession();
-  const isAuthorized = Boolean(session?.email);
+  const isAuthorized = Boolean(clubSession?.email);
 
   if (authGuest) authGuest.hidden = isAuthorized;
   if (authMember) authMember.hidden = !isAuthorized;
-  if (memberName) memberName.textContent = session?.name || session?.email || "участник";
+  if (memberName) memberName.textContent = clubSession?.name || clubSession?.email || "участник";
 
   if (exclusiveLocked) exclusiveLocked.hidden = isAuthorized;
   if (exclusiveContent) exclusiveContent.hidden = !isAuthorized;
@@ -145,12 +171,34 @@ function setClubStatus(message) {
   if (authStatus && message) authStatus.textContent = message;
 }
 
+async function refreshClubSession() {
+  const token = readClubToken();
+  if (!token) {
+    clubSession = null;
+    renderClubAccess();
+    return;
+  }
+
+  try {
+    const me = await clubRequest("/api/auth/me");
+    clubSession = me.user || null;
+
+    const exclusive = await clubRequest("/api/exclusive");
+    renderExclusiveItems(exclusive.items || []);
+    renderClubAccess();
+  } catch {
+    saveClubToken("");
+    clubSession = null;
+    renderClubAccess();
+  }
+}
+
 function initClubAuth() {
   const registerForm = $("#registerForm");
   const loginForm = $("#loginForm");
   const logoutBtn = $("#logoutBtn");
 
-  registerForm?.addEventListener("submit", (e) => {
+  registerForm?.addEventListener("submit", async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
     const name = String(form.elements.name?.value || "").trim();
@@ -175,21 +223,25 @@ function initClubAuth() {
       return;
     }
 
-    const users = readClubUsers();
-    if (users.some((u) => normalizeEmail(u.email) === email)) {
-      setClubStatus("Пользователь с таким email уже зарегистрирован.");
-      return;
-    }
+    try {
+      const result = await clubRequest("/api/auth/register", {
+        method: "POST",
+        body: { name, email, password },
+        auth: false
+      });
 
-    users.push({ name, email, password, createdAt: new Date().toISOString() });
-    saveClubUsers(users);
-    saveClubSession({ name, email });
-    form.reset();
-    renderClubAccess();
-    setClubStatus("Регистрация успешна. Эксклюзив открыт.");
+      saveClubToken(result.token || "");
+      clubSession = result.user || null;
+      form.reset();
+      renderExclusiveItems(result.items || []);
+      renderClubAccess();
+      setClubStatus("Регистрация успешна. Эксклюзив открыт.");
+    } catch (err) {
+      setClubStatus(err.message || "Ошибка регистрации.");
+    }
   });
 
-  loginForm?.addEventListener("submit", (e) => {
+  loginForm?.addEventListener("submit", async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
     const email = normalizeEmail(form.elements.email?.value);
@@ -200,26 +252,36 @@ function initClubAuth() {
       return;
     }
 
-    const users = readClubUsers();
-    const user = users.find((u) => normalizeEmail(u.email) === email && u.password === password);
-    if (!user) {
-      setClubStatus("Неверный email или пароль.");
-      return;
+    try {
+      const result = await clubRequest("/api/auth/login", {
+        method: "POST",
+        body: { email, password },
+        auth: false
+      });
+      saveClubToken(result.token || "");
+      clubSession = result.user || null;
+      form.reset();
+      renderExclusiveItems(result.items || []);
+      renderClubAccess();
+      setClubStatus("Вход выполнен. Эксклюзив открыт.");
+    } catch (err) {
+      setClubStatus(err.message || "Неверный email или пароль.");
     }
-
-    saveClubSession({ name: user.name, email: user.email });
-    form.reset();
-    renderClubAccess();
-    setClubStatus("Вход выполнен. Эксклюзив открыт.");
   });
 
-  logoutBtn?.addEventListener("click", () => {
-    saveClubSession(null);
+  logoutBtn?.addEventListener("click", async () => {
+    try {
+      await clubRequest("/api/auth/logout", { method: "POST" });
+    } catch {
+      // ignore network/logout errors on client, local session is still cleared
+    }
+    saveClubToken("");
+    clubSession = null;
     renderClubAccess();
     setClubStatus("Ты вышел из аккаунта.");
   });
 
-  renderClubAccess();
+  refreshClubSession();
 }
 
 function setupOpenCard(node, type, id) {
@@ -892,7 +954,10 @@ const openMobileMenu = () => {
 
 mobileMenuToggle?.addEventListener("click", (e) => {
   e.preventDefault();
-  if (!mobileBp.matches) return;
+  if (!mobileBp.matches) {
+    window.location.hash = "home";
+    return;
+  }
   if (document.body.classList.contains("menu-open")) closeMobileMenu();
   else openMobileMenu();
 });

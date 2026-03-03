@@ -65,7 +65,7 @@
       box-shadow:0 12px 40px rgba(0,0,0,.34);
     }
     .topbar .in{
-      height:78px; display:flex; align-items:center; justify-content:space-between; gap:14px;
+      height:78px; display:flex; align-items:center; justify-content:flex-start; gap:14px;
       flex-wrap:nowrap;
     }
     .topbar .in > *{
@@ -80,6 +80,7 @@
       flex-shrink:0;
       position:static;
       gap:0;
+      margin-left:8px;
     }
     .brand-name{
       color:var(--fg);
@@ -179,7 +180,7 @@
     }
     .nav a:hover{color:var(--fg); background:rgba(255,255,255,.04); border-color:var(--stroke2)}
     .nav a.active{color:var(--fg); background:rgba(255,255,255,.08); border-color:var(--stroke)}
-    .right{display:flex; gap:10px; align-items:center; flex-shrink:0}
+    .right{display:flex; gap:10px; align-items:center; flex-shrink:0; margin-left:auto}
 
     .btn{
       display:inline-flex; align-items:center; justify-content:center;
