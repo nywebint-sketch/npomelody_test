@@ -329,12 +329,16 @@ function renderEvents() {
   }
 
   list.forEach((eventItem) => {
+    const titleTokens = String(eventItem.title || "").trim().split(/\s+/).filter(Boolean);
+    const firstWord = titleTokens.find((token) => /[A-Za-zА-Яа-яЁё]/.test(token)) || titleTokens[0] || "—";
+    const shortTitle = firstWord.replace(/[.,:;!?]+$/g, "");
+
     const card = el("div", { className: "card" });
     card.appendChild(createMedia(eventItem.poster || "smile.png", eventItem.title, "media event-media"));
 
     const pad = el("div", { className: "pad" });
     pad.appendChild(el("div", { className: "muted event-card-date", text: fmtDT(eventItem.date) }));
-    pad.appendChild(el("b", { className: "event-card-title", text: eventItem.title }));
+    pad.appendChild(el("b", { className: "event-card-title", text: shortTitle }));
 
     card.appendChild(pad);
     setupOpenCard(card, "event", eventItem.id);

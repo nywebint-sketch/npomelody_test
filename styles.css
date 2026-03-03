@@ -763,14 +763,14 @@
       height:40px;
       border-radius:0;
       border-color:var(--stroke);
-      background:#fff;
-      padding:6px;
+      background:#000;
+      padding:0;
     }
     .brand-mark img{
-      filter:invert(1);
+      filter:none;
     }
     .nav{
-      justify-content:flex-start;
+      justify-content:center;
       gap:6px;
       margin-left:2px;
     }
@@ -828,7 +828,7 @@
     }
     .intro-start-image{
       opacity:1;
-      filter:grayscale(1) contrast(1);
+      filter:grayscale(1) contrast(1.35) brightness(.42);
       object-position:center 35%;
     }
     h2{
@@ -865,6 +865,9 @@
     .muted{
       color:var(--muted);
     }
+    #eventsGrid .event-media{
+      aspect-ratio:3/4;
+    }
     #eventsGrid .event-media img{
       object-fit:cover;
       filter:none;
@@ -883,4 +886,17 @@
     footer{
       color:var(--muted);
       background:#f4f4f2;
+    }
+    @media (max-width: 760px){
+      .brand .brand-mark{
+        width:40px;
+        height:40px;
+        padding:0;
+      }
+    }
+    @media (max-width: 380px){
+      .brand-mark{
+        width:44px;
+        height:44px;
+      }
     }
