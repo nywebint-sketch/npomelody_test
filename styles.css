@@ -734,7 +734,7 @@
       --max:1320px;
     }
     body{
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-family: "ISOCP EUR Italic", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", sans-serif;
       letter-spacing:.005em;
       background:var(--bg);
       color:var(--fg);
