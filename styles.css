@@ -579,7 +579,7 @@
       color:#fff !important;
       font-weight:900;
     }
-    #eventsGrid .event-card:active{
+    #eventsGrid .event-caубrd:active{
       background:#000;
     }
     #eventsGrid .event-card:active .event-card-title,
@@ -1008,39 +1008,27 @@
         max-width:100%;
         word-break:break-word;
       }
+      /* Афиша на мобильной: как на скрине — постер целиком, карточка без рамки */
+      #eventsGrid .event-card{
+        padding:0;
+        width:100%;
+        max-width:100%;
+        box-sizing:border-box;
+        background:var(--card);
+        border:none;
+        box-shadow:none;
+      }
       #eventsGrid .event-poster,
       #eventsGrid .event-media{
         aspect-ratio:unset !important;
         height:auto !important;
-        overflow:visible;
-      }
-      #eventsGrid .event-poster img,
-      #eventsGrid .event-media img{
-        width:100%;
-        height:auto;
-        object-fit:contain;
-      }
-    }
-
-    @media (max-width: 768px){
-      .event-card{
-        padding:12px;
-        width:100%;
-        box-sizing:border-box;
-      }
-      .event-card .pad{
-        padding:12px 0 0;
-      }
-      #eventsGrid .event-poster,
-      #eventsGrid .event-media{
-        width:100%;
-        margin:-12px -12px 0;
-        padding:0;
+        overflow:hidden;
+        padding:0 !important;
         border:none;
         background:transparent;
-        aspect-ratio:unset;
-        height:auto;
-        overflow:visible;
+        width:100%;
+        max-width:100%;
+        display:block;
       }
       #eventsGrid .event-poster img,
       #eventsGrid .event-media img{
@@ -1049,6 +1037,44 @@
         display:block;
         object-fit:contain;
         max-width:100%;
+        vertical-align:top;
+      }
+      #eventsGrid .event-card .pad{
+        padding:12px;
+      }
+    }
+
+    @media (max-width: 768px){
+      /* Карточка афиши: как на скрине — изображение сверху на всю ширину, подпись под ним */
+      .event-card{
+        padding:0;
+        width:100%;
+        box-sizing:border-box;
+      }
+      .event-card .pad{
+        padding:12px;
+      }
+      #eventsGrid .event-poster,
+      #eventsGrid .event-media{
+        width:100%;
+        max-width:100%;
+        margin:0;
+        padding:0;
+        border:none;
+        background:transparent;
+        aspect-ratio:unset !important;
+        height:auto;
+        overflow:hidden;
+        display:block;
+      }
+      #eventsGrid .event-poster img,
+      #eventsGrid .event-media img{
+        width:100%;
+        height:auto;
+        display:block;
+        object-fit:contain;
+        max-width:100%;
+        vertical-align:top;
       }
       #eventsGrid{
         grid-template-columns:repeat(2, minmax(0,1fr));
@@ -1121,6 +1147,12 @@
       }
       #eventsGrid{
         grid-template-columns:repeat(2, minmax(0,1fr)) !important;
+      }
+      /* Афиша: постер не обрезать в квадрат, отображение как на скрине */
+      #eventsGrid .event-poster,
+      #eventsGrid .event-media{
+        aspect-ratio:unset !important;
+        padding:0 !important;
       }
       .media{
         aspect-ratio:1/1;
