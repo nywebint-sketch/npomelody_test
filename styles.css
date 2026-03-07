@@ -183,6 +183,14 @@
     .nav a:hover{color:var(--fg); background:rgba(0,0,0,.04); border-color:var(--stroke2)}
     .nav a.active{color:var(--fg); background:rgba(0,0,0,.08); border-color:var(--stroke)}
     .right{display:flex; gap:10px; align-items:center; flex-shrink:0; margin-left:auto}
+    .right .btn{
+      width:42px;
+      min-width:42px;
+      height:42px;
+      padding:0;
+      font-size:10px;
+    }
+    .right .btn .sc-icon{width:16px; height:16px}
 
     .btn{
       display:inline-flex; align-items:center; justify-content:center;
@@ -676,10 +684,16 @@
         top:50%;
         transform:translateY(-50%);
       }
+      .right .btn{
+        width:38px;
+        min-width:38px;
+        height:38px;
+        font-size:9px;
+      }
+      .right .btn .sc-icon{width:14px; height:14px}
       main{padding-top:68px}
       .mobile-menu{top:68px}
       .mobile-menu-backdrop{inset:68px 0 0 0}
-      .right .btn{display:none}
       h1{font-size:clamp(28px, 8.2vw, 44px); line-height:1.06}
       h2{font-size:clamp(18px, 5.8vw, 22px)}
       body{font-size:15px; line-height:1.45}
@@ -800,6 +814,13 @@
       .brand{gap:9px}
       .brand-name{font-size:31px}
       .brand-mark{width:36px; height:36px; font-size:19px}
+      .right .btn{
+        width:36px;
+        min-width:36px;
+        height:36px;
+        font-size:8px;
+      }
+      .right .btn .sc-icon{width:12px; height:12px}
       .btn{padding:8px 11px; font-size:13px}
       .tag{padding:5px 8px}
       .mobile-menu a{font-size:13px}

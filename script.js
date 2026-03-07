@@ -19,8 +19,8 @@ const data = {
     { id: "e1", title: "Maslaynitsa", date: "2026-02-19T22:00:00", place: "НПО Мелодия", tags: ["live", "electronic"], status: "archive", poster: "event-maslaynitsa.jpg", about: "Ивент Maslaynitsa.", lineup: ["am1d", "di-au", "feel gainsbourg", "egor popov", "nyaono"] },
     { id: "e2", title: "Cliche", date: "2026-02-20T22:00:00", place: "НПО Мелодия", tags: ["club", "b2b"], status: "archive", poster: "event-cliche.jpg", about: "Ночной ивент Cliche.", lineup: ["ayokiddy", "fckshizy", "luxxomea", "manyice", "norman b2b void", "whysobored", "yardyard"] },
     { id: "e3", title: "Pirate Jet", date: "2026-02-28T20:00:00", place: "НПО Мелодия", tags: ["live", "concert"], status: "archive", poster: "event-pirate-jet.jpg", about: "Pirate Jet: концерты и live performance.", lineup: ["gummies (concert)", "черные бояре x света ефремова (live performance)", "m1lbeee (concert)", "ucuda (concert)", "фантом м-100 (live)", "valentin fufaev", "dj baby steps", "yze (concert)", "bogdamn"] },
-    { id: "e4", title: "8 Марта ", date: "2026-03-08T21:30:00", place: "НПО Мелодия", tags: ["weekend", "live", "32h"], status: "tickets", poster: "event-8-marta.jpg", ticketUrl: "https://moscow.qtickets.events/219423-78", about: "Первый уикенд весны — 32 часа. День 1. Двери: 21:30.", lineup: ["Line-up скоро"] },
-    { id: "e5", title: "9 Марта  (день 2)", date: "2026-03-09T17:00:00", place: "НПО Мелодия", tags: ["weekend", "8march"], status: "tickets", poster: "event-8-marta.jpg", ticketUrl: "https://moscow.qtickets.events/219423-78", about: "Продолжение уикенда весны. День 2. Полный анонс по лайнапу — скоро.", lineup: ["Line-up скоро"] }
+    { id: "e4", title: "7+8", date: "2026-03-07T21:00:00", place: "НПО Мелодия", address: "Москва, 3-я улица Ямского Поля, 2 к5", tags: ["weekend", "live", "32h"], status: "tickets", poster: "event-8-marta.jpg", ticketUrl: "https://moscow.qtickets.events/219423-78", about: "Первый викенд весны — 32 часа. Концерты Макса Беженова и BOORLUCK: GALLEON-25. Abelle, Utah, RHa & Roma Ptashenko, Сaspian Kid, Wei. Утренние: Denis Kostitsyn & Rvbbt & Ballu, Sereja Borisov. Перфоманс: Таи & Tomashino (Лаборатория Речи), Mishinuki Waterwitch & Soundxo, Лиза Голицына, Муся Кроткова. В ночи: Сurrent Сall, Marina Bibik, Mari Ka, Nastya Tkacheva. Билет не является гарантией входа, на мероприятии действует face control.", lineup: ["Макс Беженов", "BOORLUCK: GALLEON-25", "Abelle", "Utah", "RHa & Roma Ptashenko", "Сaspian Kid", "Wei", "Denis Kostitsyn & Rvbbt & Ballu", "Sereja Borisov", "Таи & Tomashino", "Mishinuki Waterwitch & Soundxo", "Лиза Голицына", "Муся Кроткова", "Сurrent Сall", "Marina Bibik", "Mari Ka", "Nastya Tkacheva"] },
+    { id: "e5", title: "7+8 (день 2)", date: "2026-03-09T17:00:00", place: "НПО Мелодия", address: "Москва, 3-я улица Ямского Поля, 2 к5", tags: ["weekend", "8march"], status: "tickets", poster: "event-8-marta.jpg", ticketUrl: "https://moscow.qtickets.events/219423-78", about: "Продолжение 7+8. Восьмое марта — полный вайб. Единый билет на оба дня.", lineup: [] }
   ],
   artists: [
     { id: "a2", name: "AND", role: "Live act", bookable: true, tags: ["live", "hardware"], bio: "Живой сет с железом." },
@@ -528,6 +528,14 @@ function buildEventModalBody(eventItem) {
     lineup.appendChild(document.createTextNode(name));
   });
   right.appendChild(lineup);
+
+  if (eventItem.address) {
+    appendDivider(right);
+    const addrRow = el("div", { className: "row" });
+    addrRow.appendChild(el("span", { className: "tag", text: "Адрес" }));
+    addrRow.appendChild(el("span", { className: "muted", text: eventItem.address }));
+    right.appendChild(addrRow);
+  }
 
   appendDivider(right);
 
