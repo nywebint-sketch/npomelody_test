@@ -561,13 +561,23 @@
     }
     .modal-header{
       display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:12px;
+      justify-content:center;
+      align-items:center;
+      position:relative;
       padding:18px 20px;
       border-bottom:1px solid var(--stroke2);
+      min-height:72px;
     }
-    .modal-header-text{min-width:0}
+    .modal-header-text{
+      min-width:0;
+      text-align:center;
+    }
+    .modal-header .btn.ghost{
+      position:absolute;
+      right:20px;
+      top:50%;
+      transform:translateY(-50%);
+    }
     .modal-title{
       font-weight:700;
       letter-spacing:.02em;
@@ -634,6 +644,18 @@
     #mBody .tag{
       color:var(--fg);
       border-color:var(--stroke2);
+    }
+    #mBody .event-modal-left .pad{
+      display:flex;
+      justify-content:center;
+    }
+    #mBody .event-modal-left .pad .btn{
+      justify-content:center;
+      padding:8px 14px;
+      font-size:12px;
+      white-space:normal;
+      min-width:0;
+      text-align:center;
     }
 
     footer{padding:24px 0 40px; color:var(--muted); font-size:14px}
@@ -782,6 +804,17 @@
       #podcastsGrid,
       #streamsList{
         gap:8px;
+      }
+      #mBody .event-modal-left,
+      #mBody .event-modal-left .card{
+        overflow:visible;
+      }
+      #mBody .event-modal-left .pad .btn{
+        max-width:100%;
+        word-break:break-word;
+      }
+      #eventsGrid .event-media img{
+        object-fit:contain;
       }
     }
 
