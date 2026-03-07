@@ -322,8 +322,8 @@ function renderEvents() {
   const list = [...data.events].reverse();
 
   list.forEach((eventItem) => {
-    const card = el("div", { className: "card" });
-    card.appendChild(createMedia(eventItem.poster || "smile.png", eventItem.title, "media event-media"));
+    const card = el("div", { className: "card event-card" });
+    card.appendChild(createMedia(eventItem.poster || "smile.png", eventItem.title, "media event-media event-poster"));
 
     const pad = el("div", { className: "pad" });
     pad.appendChild(el("div", { className: "muted event-card-date", text: fmtDT(eventItem.date) }));
@@ -477,25 +477,10 @@ const closeModal = () => {
 const appendDivider = (parent) => parent.appendChild(el("div", { className: "divider" }));
 
 function buildEventModalBody(eventItem) {
-  const grid = el("div", { className: "grid g2 event-modal-grid" });
+  const wrapper = el("div", { className: "event-modal-wrap" });
 
   const left = el("div", { className: "card event-modal-left" });
   left.appendChild(createMedia(eventItem.poster || "smile.png", eventItem.title, "media"));
-  const leftPad = el("div", { className: "pad" });
-  const ticketUrl = safeHttpUrl(eventItem.ticketUrl);
-  if (ticketUrl) {
-    const link = el("a", { className: "btn primary", text: "Билеты / регистрация" });
-    link.href = ticketUrl;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    leftPad.appendChild(link);
-  } else {
-    const button = el("button", { className: "btn primary", text: "Билеты / регистрация" });
-    button.type = "button";
-    button.addEventListener("click", () => alert("Тут будет ссылка на билеты/регистрацию"));
-    leftPad.appendChild(button);
-  }
-  left.appendChild(leftPad);
 
   const right = el("div", { className: "card pad event-modal-right" });
   right.appendChild(el("b", { text: "Описание" }));
@@ -521,9 +506,25 @@ function buildEventModalBody(eventItem) {
     right.appendChild(addrRow);
   }
 
-  grid.appendChild(left);
-  grid.appendChild(right);
-  return grid;
+  const ticketUrl = safeHttpUrl(eventItem.ticketUrl);
+  const actions = el("div", { className: "event-modal-actions" });
+  if (ticketUrl) {
+    const link = el("a", { className: "btn primary event-ticket-btn", text: "Билеты / регистрация" });
+    link.href = ticketUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    actions.appendChild(link);
+  } else {
+    const button = el("button", { className: "btn primary event-ticket-btn", text: "Билеты / регистрация" });
+    button.type = "button";
+    button.addEventListener("click", () => alert("Тут будет ссылка на билеты/регистрацию"));
+    actions.appendChild(button);
+  }
+
+  wrapper.appendChild(left);
+  wrapper.appendChild(right);
+  wrapper.appendChild(actions);
+  return wrapper;
 }
 
 function buildArtistModalBody(artist) {

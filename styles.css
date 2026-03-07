@@ -498,6 +498,13 @@
     }
     #eventsGrid .event-media img{object-fit:cover}
 
+    /* Афиша: карточка события (десктоп без изменений) */
+    .event-card{box-sizing:border-box}
+    .event-poster img{
+      display:block;
+      max-width:100%;
+    }
+
     .auth-forms{
       gap:10px;
     }
@@ -645,17 +652,49 @@
       color:var(--fg);
       border-color:var(--stroke2);
     }
-    #mBody .event-modal-left .pad{
+    .event-modal-wrap{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      grid-template-rows:auto auto;
+      gap:14px;
+    }
+    .event-modal-wrap .event-modal-left{
+      grid-column:1;
+      grid-row:1;
+    }
+    .event-modal-wrap .event-modal-right{
+      grid-column:2;
+      grid-row:1 / -1;
+    }
+    .event-modal-wrap .event-modal-actions{
+      grid-column:1;
+      grid-row:2;
       display:flex;
       justify-content:center;
     }
-    #mBody .event-modal-left .pad .btn{
+    .event-modal-wrap .event-modal-actions .event-ticket-btn{
       justify-content:center;
       padding:8px 14px;
       font-size:12px;
-      white-space:normal;
-      min-width:0;
-      text-align:center;
+    }
+    #mBody .event-modal-left{
+      width:fit-content;
+      max-width:100%;
+      align-self:start;
+    }
+    #mBody .event-modal-left .media{
+      padding:0;
+      background:transparent;
+      border:none;
+      aspect-ratio:unset;
+      height:auto;
+    }
+    #mBody .event-modal-left .media img{
+      width:auto;
+      height:auto;
+      max-width:100%;
+      display:block;
+      vertical-align:top;
     }
 
     footer{padding:24px 0 40px; color:var(--muted); font-size:14px}
@@ -794,12 +833,15 @@
       .catalog-meta{
         font-size:10px;
       }
-      #eventsGrid,
       #artistsGrid,
       #releasesGrid,
       #merchGrid{
         grid-template-columns:repeat(2, minmax(0,1fr)) !important;
         gap:8px;
+      }
+      #eventsGrid{
+        grid-template-columns:1fr !important;
+        gap:16px;
       }
       #podcastsGrid,
       #streamsList{
@@ -818,6 +860,68 @@
       }
     }
 
+    @media (max-width: 768px){
+      .event-card{
+        padding:12px;
+        width:100%;
+        box-sizing:border-box;
+      }
+      .event-card .pad{
+        padding:12px 0 0;
+      }
+      .event-poster{
+        width:100%;
+        margin:-12px -12px 0;
+        padding:0;
+        border:none;
+        background:transparent;
+        aspect-ratio:unset;
+        height:auto;
+      }
+      .event-poster img{
+        width:100%;
+        height:auto;
+        display:block;
+        object-fit:contain;
+      }
+      #eventsGrid{
+        grid-template-columns:1fr;
+        gap:16px;
+      }
+      .event-modal-wrap{
+        grid-template-columns:1fr;
+        grid-template-rows:auto auto auto;
+      }
+      .event-modal-wrap .event-modal-left{
+        grid-row:1;
+      }
+      .event-modal-wrap .event-modal-right{
+        grid-column:1;
+        grid-row:2;
+      }
+      .event-modal-wrap .event-modal-actions{
+        grid-column:1;
+        grid-row:3;
+        padding-top:8px;
+      }
+      .event-modal-actions .event-ticket-btn{
+        width:100%;
+        max-width:100%;
+        background:transparent !important;
+        border:1px solid transparent;
+        color:var(--muted);
+        padding:11px 12px;
+        font-size:14px;
+        transition:color .18s ease, background .18s ease, border-color .18s ease;
+      }
+      .event-modal-actions .event-ticket-btn:hover,
+      .event-modal-actions .event-ticket-btn:active{
+        color:var(--fg);
+        background:rgba(0,0,0,.04) !important;
+        border-color:var(--stroke2);
+      }
+    }
+
     @media (max-width: 520px){
       .container{padding:0 14px}
       .g4{grid-template-columns:1fr}
@@ -829,11 +933,13 @@
       #streamNext{font-size:11px; padding:6px 9px}
 
       /* Keep compact grids on very small screens */
-      #eventsGrid,
       #artistsGrid,
       #releasesGrid,
       #merchGrid{
         grid-template-columns:repeat(2, minmax(0,1fr)) !important;
+      }
+      #eventsGrid{
+        grid-template-columns:1fr !important;
       }
       .media{
         aspect-ratio:1/1;
