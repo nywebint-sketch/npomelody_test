@@ -9,13 +9,31 @@
     :root{
       --bg:#f4f4f1;
       --fg:#111;
+      --text:#111;
+      --text-muted:rgba(17,17,17,.68);
       --muted:rgba(17,17,17,.68);
       --stroke:rgba(17,17,17,.16);
       --stroke2:rgba(17,17,17,.10);
-      --card:rgba(0,0,0,.06);
+      --border:rgba(17,17,17,.10);
+      --surface:rgba(0,0,0,.04);
+      --surface-2:rgba(0,0,0,.06);
+      --card-bg:rgba(0,0,0,.06);
+      --card-text:var(--text);
+      --card:var(--card-bg);
+      --button-bg:rgba(0,0,0,.08);
+      --button-text:var(--text);
+      --overlay:rgba(0,0,0,.55);
+      --header-bg:transparent;
+      --bg-overlay:rgba(255,255,255,.76);
+      --surface-hover:#111;
+      --text-hover:#fff;
+      --border-hover:transparent;
       --radius:18px;
       --max:1180px;
-      --modal-bg:var(--card);
+      --modal-bg:rgba(255,255,255,.97);
+      --focus-offset:2px;
+      --pad:16px;
+      --pad-sm:12px;
       --btn-primary-inverted-fg:var(--bg);
     }
     *{box-sizing:border-box}
@@ -52,7 +70,7 @@
       inset:0;
       z-index:-1;
       pointer-events:none;
-      background:rgba(255,255,255,.76);
+      background:var(--bg-overlay);
     }
     a{color:inherit;text-decoration:none}
     button,input,textarea,select{font:inherit}
@@ -62,9 +80,9 @@
       position:fixed; inset:0 0 auto 0; z-index:50;
       height:78px;
       backdrop-filter: blur(12px);
-      background: rgba(248,248,244,.78);
-      border-bottom:1px solid var(--stroke2);
-      box-shadow:0 12px 40px rgba(0,0,0,.10);
+      background: var(--header-bg);
+      border-bottom:1px solid var(--border);
+      box-shadow:none;
     }
     .topbar .in{
       height:78px; display:flex; align-items:center; justify-content:flex-start; gap:14px;
@@ -96,11 +114,17 @@
     }
     .brand-mark{
       width:42px; height:42px; border-radius:13px;
-      border:1px solid var(--stroke);
-      background: rgba(0,0,0,.04);
+      border:none;
+      background:transparent;
       display:flex; align-items:center; justify-content:center;
       padding:7px;
       overflow:hidden;
+      transition:background .25s ease, color .25s ease;
+    }
+    .brand-mark:hover,
+    .brand-mark:active{
+      background:var(--surface-hover);
+      color:var(--text-hover);
     }
     .brand-mark img{
       width:100%;
@@ -129,9 +153,9 @@
       left:12px;
       right:12px;
       z-index:80;
-      border:1px solid var(--stroke);
+      border:1px solid var(--border);
       border-radius:16px;
-      background:rgba(248,248,244,.97);
+      background:var(--bg);
       padding:10px;
       transform:translateY(-14px);
       opacity:0;
@@ -149,9 +173,9 @@
     }
     .mobile-menu a:hover,
     .mobile-menu a:active{
-      color:var(--fg);
-      background:rgba(0,0,0,.04);
-      border-color:var(--stroke2);
+      color:var(--text-hover);
+      background:var(--surface-hover);
+      border-color:var(--border-hover);
     }
     body.menu-open .mobile-menu{
       transform:translateY(0);
@@ -171,7 +195,7 @@
       justify-content:center;
     }
     .nav a{
-      color:var(--muted);
+      color:var(--text-muted);
       font-size:13px;
       font-weight:500;
       letter-spacing:.02em;
@@ -179,10 +203,22 @@
       border-radius:12px;
       border:1px solid transparent;
       white-space:nowrap;
+      transition:background .25s ease, color .25s ease, border-color .25s ease;
     }
-    .nav a:hover{color:var(--fg); background:rgba(0,0,0,.04); border-color:var(--stroke2)}
-    .nav a.active{color:var(--fg); background:rgba(0,0,0,.08); border-color:var(--stroke)}
+    .nav a:hover,
+    .nav a:active{
+      color:var(--text-hover);
+      background:var(--surface-hover);
+      border-color:var(--border-hover);
+    }
+    .nav a.active{color:var(--text); background:var(--surface-2); border-color:var(--stroke)}
     .right{display:flex; gap:10px; align-items:center; flex-shrink:0; margin-left:auto}
+    .topbar .btn:hover,
+    .topbar .btn:active{
+      background:var(--surface-hover);
+      color:var(--text-hover);
+      border-color:var(--border-hover);
+    }
     .right .btn{
       width:42px;
       min-width:42px;
@@ -196,9 +232,9 @@
       display:inline-flex; align-items:center; justify-content:center;
       padding:10px 14px;
       border-radius:999px;
-      border:1px solid var(--stroke);
-      background: rgba(0,0,0,.06);
-      color:var(--fg);
+      border:1px solid var(--border);
+      background:var(--button-bg);
+      color:var(--button-text);
       font-size:13px;
       font-weight:500;
       letter-spacing:.02em;
@@ -207,8 +243,8 @@
       user-select:none;
       white-space:nowrap;
     }
-    .btn:hover{transform:translateY(-1px); background:rgba(0,0,0,.08); border-color:rgba(17,17,17,.24)}
-    .btn.primary{background:rgba(0,0,0,.12); border-color:rgba(17,17,17,.24)}
+    .btn:hover{transform:translateY(-1px); background:var(--surface-2); border-color:var(--stroke)}
+    .btn.primary{background:var(--surface-hover); color:var(--text-hover); border-color:var(--surface-hover)}
     .btn.ghost{background:transparent}
     .btn.sc-btn{
       width:42px;
@@ -225,13 +261,13 @@
     }
 
     main{padding-top:78px}
-    section{padding:56px 0; border-bottom:1px solid rgba(17,17,17,.08)}
+    section{padding:56px 0; border-bottom:1px solid var(--border)}
     .head{display:flex; align-items:flex-end; justify-content:space-between; gap:14px; margin-bottom:18px}
     .artist-search{max-width:220px}
     h1,h2{margin:0}
     h1{font-size: clamp(36px, 4.8vw, 68px); line-height:1.04; letter-spacing:.02em; font-weight:560}
     h2{font-size:clamp(20px, 2vw, 28px); line-height:1.15; letter-spacing:.015em; font-weight:500}
-    .sub{margin-top:10px; color:var(--muted); max-width:760px; font-size:clamp(15px, .35vw + 14px, 18px); line-height:1.55}
+    .sub{margin-top:10px; color:var(--text-muted); max-width:760px; font-size:clamp(15px, .35vw + 14px, 18px); line-height:1.55}
     b,strong{font-weight:560}
 
     .grid{display:grid; gap:14px}
@@ -241,60 +277,52 @@
 
     .card{
       border:none;
-      background: var(--card);
+      background: var(--card-bg);
       border-radius: var(--radius);
       overflow:hidden;
       backdrop-filter: blur(8px);
       box-shadow:none;
     }
+    /* Убрать серые подложки с обёрток разделов (артисты, релизы) */
+    .card:has(.pad > #artistsGrid),
+    .card:has(.pad > #releasesGrid){
+      background:transparent;
+      backdrop-filter:none;
+    }
     .open-card{
       cursor:pointer;
       user-select:none;
-      transition:background .12s ease, border-color .12s ease, transform .12s ease;
-    }
-    .open-card:hover{
-      background:rgba(0,0,0,.05);
-      border-color:rgba(17,17,17,.20);
-    }
-    .open-card:active,
-    .open-card.is-pressed{
-      background:rgba(0,0,0,.08);
-      border-color:rgba(17,17,17,.24);
-      transform:translateY(1px);
-    }
-    .open-card:focus-visible{
-      outline:2px solid rgba(17,17,17,.35);
-      outline-offset:2px;
-    }
-    /* Такой же эффект отображения как у карточек афиши: полупрозрачный фон, инверсия при наведении */
-    .open-card{
       width:100%;
       max-width:100%;
       box-sizing:border-box;
-      background:var(--card);
+      background:var(--card-bg);
       border:none;
       box-shadow:none;
-      transition:background .25s ease, border-color .25s ease, box-shadow .25s ease, color .25s ease;
+      color:var(--card-text);
+      transition:background .25s ease, border-color .25s ease, color .25s ease;
+    }
+    .open-card:focus-visible{
+      outline:2px solid var(--stroke);
+      outline-offset:var(--focus-offset);
     }
     .open-card:hover,
     .open-card:active,
     .open-card.is-pressed{
-      background:#000 !important;
-      border-color:transparent !important;
-      box-shadow:none !important;
-      color:#fff !important;
+      background:var(--surface-hover) !important;
+      border-color:var(--border-hover) !important;
+      color:var(--text-hover) !important;
     }
     .open-card:hover *:not(img):not(svg),
     .open-card:active *:not(img):not(svg),
     .open-card.is-pressed *:not(img):not(svg){
-      color:#fff !important;
+      color:var(--text-hover) !important;
       border-color:rgba(255,255,255,.25) !important;
     }
     .open-card:hover .tag,
     .open-card:active .tag,
     .open-card.is-pressed .tag{
       background:transparent !important;
-      color:#fff !important;
+      color:var(--text-hover) !important;
     }
     .open-card:hover .catalog-title,
     .open-card:hover .artist-card-name,
@@ -332,19 +360,19 @@
       word-break:break-word;
       line-height:1.2;
     }
-    .pad{padding:16px}
-    .divider{height:1px; background:var(--stroke2); margin:14px 0}
-    .muted{color:var(--muted)}
+    .pad{padding:var(--pad)}
+    .divider{height:1px; background:var(--border); margin:14px 0}
+    .muted{color:var(--text-muted)}
     .tag{
       display:inline-flex; align-items:center;
       padding:6px 10px;
       border-radius:999px;
-      border:1px solid var(--stroke2);
-      background:rgba(0,0,0,.03);
+      border:1px solid var(--border);
+      background:var(--surface);
       font-size:11px;
       font-weight:500;
       letter-spacing:.02em;
-      color:rgba(17,17,17,.82);
+      color:var(--text);
       white-space:nowrap;
     }
     .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
@@ -407,9 +435,9 @@
       display:inline-flex; align-items:center; gap:8px;
       padding:7px 10px;
       border-radius:999px;
-      border:1px solid var(--stroke2);
-      background:rgba(0,0,0,.03);
-      color:var(--muted);
+      border:1px solid var(--border);
+      background:var(--surface);
+      color:var(--text-muted);
       font-size:12px;
       letter-spacing:.02em;
       white-space:nowrap;
@@ -528,7 +556,7 @@
       width:100%;
       max-width:100%;
       padding:0;
-      border:none;
+      border:none;сде
       background:transparent;
       overflow:hidden;
       display:block;
@@ -558,33 +586,27 @@
     .media.cover img{
       object-fit:cover;
     }
-    /* Афиша: такой же эффект — полупрозрачный фон, при наведении инверсия */
+    /* Карточки афиши: только постер + название до hover; без подложек; изображения не инвертируются */
     #eventsGrid .event-card{
       box-sizing:border-box;
       width:100%;
       max-width:100%;
-      background:var(--card);
+      background:transparent;
       border:none;
       box-shadow:none;
-      transition:background .25s ease, box-shadow .2s ease, border .2s ease;
+      transition:background .25s ease, color .25s ease;
       overflow:visible;
     }
-    #eventsGrid .event-card:hover{
-      background:#000;
-      border:none;
-      box-shadow:none;
+    #eventsGrid .event-card:hover,
+    #eventsGrid .event-card:active{
+      background:var(--surface-hover);
     }
     #eventsGrid .event-card:hover .event-card-title,
-    #eventsGrid .event-card:hover .event-card-date{
-      color:#fff !important;
-      font-weight:900;
-    }
-    #eventsGrid .event-caубrd:active{
-      background:#000;
-    }
+    #eventsGrid .event-card:hover .event-card-date,
     #eventsGrid .event-card:active .event-card-title,
     #eventsGrid .event-card:active .event-card-date{
-      color:#fff !important;
+      color:var(--text-hover) !important;
+      font-weight:900;
     }
     #eventsGrid .event-card .pad{
       display:flex;
@@ -592,15 +614,24 @@
       justify-content:space-between;
       align-items:center;
       gap:10px;
+      padding:var(--pad-sm) var(--pad);
+      background:transparent;
+      min-height:0;
+    }
+    #eventsGrid .event-card:hover .pad,
+    #eventsGrid .event-card:active .pad{
+      background:transparent;
     }
     #eventsGrid .event-card .event-card-title{
       text-align:left;
       flex:1;
       min-width:0;
+      color:var(--text);
     }
     #eventsGrid .event-card .event-card-date{
       text-align:right;
       flex-shrink:0;
+      color:var(--text-muted);
     }
     #eventsGrid .event-card .event-card-title,
     #eventsGrid .event-card .event-card-date{
@@ -634,14 +665,14 @@
     .auth-form{
       display:grid;
       gap:8px;
-      padding:12px;
-      border:1px solid var(--stroke2);
-      background:rgba(0,0,0,.02);
+      padding:var(--pad-sm);
+      border:1px solid var(--border);
+      background:var(--surface);
     }
     .auth-member{
-      border:1px solid var(--stroke2);
-      padding:12px;
-      background:rgba(0,0,0,.02);
+      border:1px solid var(--border);
+      padding:var(--pad-sm);
+      background:var(--surface);
     }
     .auth-status{
       margin-top:12px;
@@ -658,20 +689,25 @@
       width:100%;
       padding:12px 12px;
       border-radius:14px;
-      border:1px solid var(--stroke2);
-      background:rgba(0,0,0,.03);
-      color:var(--fg);
+      border:1px solid var(--border);
+      background:var(--surface);
+      color:var(--text);
       outline:none;
       transition:border-color .15s ease, background .15s ease;
     }
     .input::placeholder,
     textarea::placeholder{
-      color:var(--muted);
+      color:var(--text-muted);
     }
     .input:focus,
     textarea:focus{
       border-color:var(--stroke);
-      background:rgba(0,0,0,.04);
+      background:var(--surface-2);
+    }
+    .input:focus-visible,
+    textarea:focus-visible{
+      outline:2px solid var(--stroke);
+      outline-offset:var(--focus-offset);
     }
     textarea{min-height:110px; resize:vertical}
 
@@ -679,7 +715,8 @@
     .modal-overlay{
       position:fixed; inset:0; z-index:100; display:none;
       align-items:center; justify-content:center; padding:18px;
-      background:rgba(0,0,0,.70); backdrop-filter:blur(8px);
+      background:var(--overlay);
+      backdrop-filter:blur(8px);
     }
     .modal-inner{
       width:min(920px, 100%);
@@ -687,7 +724,7 @@
       max-height:86vh;
       overflow-x:hidden;
       overflow-y:auto;
-      border:1px solid var(--stroke);
+      border:1px solid var(--border);
       background:var(--modal-bg);
       box-shadow:0 24px 64px rgba(0,0,0,.18);
       box-sizing:border-box;
@@ -698,7 +735,7 @@
       align-items:center;
       position:relative;
       padding:18px 20px;
-      border-bottom:1px solid var(--stroke2);
+      border-bottom:1px solid var(--border);
       min-height:72px;
     }
     .modal-header-text{
@@ -716,15 +753,34 @@
       letter-spacing:.02em;
       font-size:clamp(18px, 2vw, 22px);
       line-height:1.2;
-      color:var(--fg);
+      color:var(--text);
     }
     .modal-sub{
       margin-top:6px;
       font-size:13px;
-      color:var(--muted);
+      color:var(--text-muted);
       line-height:1.4;
     }
-    .modal-body{background:transparent}
+    .modal-body{background:transparent; color:var(--text)}
+    .modal-inner{color:var(--text); background:var(--modal-bg)}
+    /* Карточка афиши при раскрытии: чёрный текст на белом (в стиле сайта) */
+    #mBody{color:var(--text)}
+    #mBody .event-modal-right,
+    .event-modal-wrap .event-modal-right{
+      background:var(--modal-bg);
+      color:var(--text);
+    }
+    #mBody .event-modal-right .muted,
+    .event-modal-wrap .event-modal-right .muted{
+      color:var(--text-muted);
+    }
+    #mBody .event-modal-right b,
+    #mBody .event-modal-right .tag{
+      color:var(--text);
+    }
+    #mBody .event-modal-right .divider{
+      background:var(--border);
+    }
 
     /* Booking form in modal */
     #mBody .booking-form-modal{
@@ -763,20 +819,20 @@
       margin-bottom:2px;
     }
     #mBody .card.pad .muted{
-      color:var(--muted);
+      color:var(--text-muted);
     }
     #mBody .card .pad .muted{
-      color:var(--muted);
+      color:var(--text-muted);
       font-style:italic;
       line-height:1.5;
     }
     #mBody .card .media.square{
-      border:1px solid var(--stroke2);
-      background:rgba(0,0,0,.06);
+      border:1px solid var(--border);
+      background:var(--surface-2);
     }
     #mBody .tag{
-      color:var(--fg);
-      border-color:var(--stroke2);
+      color:var(--text);
+      border-color:var(--border);
     }
     .event-modal-wrap{
       display:grid;
@@ -806,16 +862,16 @@
       font-size:13px;
       background:transparent !important;
       border:1px solid transparent !important;
-      color:var(--muted);
+      color:var(--text-muted);
       transition:color .18s ease, background .18s ease, border-color .18s ease;
     }
     #mBody .event-modal-actions .event-ticket-btn:hover,
     #mBody .event-modal-actions .event-ticket-btn:active,
     .event-modal-wrap .event-modal-actions .event-ticket-btn:hover,
     .event-modal-wrap .event-modal-actions .event-ticket-btn:active{
-      color:var(--fg);
-      background:rgba(0,0,0,.04) !important;
-      border-color:var(--stroke2) !important;
+      color:var(--text);
+      background:var(--surface) !important;
+      border-color:var(--border) !important;
     }
     #mBody .event-modal-left{
       width:fit-content;
